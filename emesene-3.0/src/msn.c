@@ -1,3 +1,8 @@
+/** @file msn.c
+ * The core of the msn lib. Init, login, and general functions belong here
+ * @author dx
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,11 +15,17 @@
 int presentation(MsnSession *, MsnSocket *);
 int sso_auth(char *);
 
+
 int msn_init(MsnSession *msn, int argc, char *argv[]) {
     memset(msn, 0, sizeof(MsnSession));
     /*here i should parse the args*/
     return true;
 }
+
+
+/** Starts the login phase with the dispatch server.
+ * @TODO Doesn't go further than the presentation
+ */
 
 int msn_login(MsnSession *msn) {
     MsnSocket msn_socket;
@@ -25,10 +36,14 @@ int msn_login(MsnSession *msn) {
     return true;
 }
 
+/** Introduces the client to the dispatch server. Handles redirects to
+ *  notification, and returns if the last reply isn't XFR
+ *  @TODO Does not return, in fact it tries to handle GCF/USR
+ */
+
 int presentation(MsnSession *msn, MsnSocket *msn_socket) {
     char cmd[CMDBUF];
     char tmp[CMDBUF];
-
     
     socket_send_command(msn_socket, "VER", "MSNP15 CVR0");
 
@@ -69,6 +84,9 @@ int presentation(MsnSession *msn, MsnSocket *msn_socket) {
     return true;
 }
 
+/** Replies the SSO ticket.
+ *  @TODO not yet
+ */
 
 int sso_auth(char *cmd) {
     return true;
