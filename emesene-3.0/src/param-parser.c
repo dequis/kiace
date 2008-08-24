@@ -3,13 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdarg.h>
+
 #include "param-parser.h"
 
 int count_words(char *);
 
 /* i'm proud of this pointer mess [because it's my first pointer mess] */
+/* @wariano: strtok sucks, because the man page says so */
 
-char** dx_parse_command(char *input) {
+char **dx_parse_command(char *input) {
     char **array_first;
     char **array;
     char *buffer;
@@ -54,6 +57,51 @@ int count_words(char *input) {
         ptr++;
     }
     return retval + 1; /*include last word*/
+}
+
+int dx_match_command(char *cmd, int expect, ...) {
+    va_list ap;
+    char **parsed;
+    char *cmp;
+    int i;
+
+    va_start(ap, expect);
+
+    parsed = dx_parse_command(cmd);
+
+    for (i=0; i < expect && parsed[i] != NULL; i++) {
+        cmp = va_arg(ap, char *); /*vik_kernes*/
+        if (cmp == NULL) {
+            continue;
+        }
+        if (strncmp(parsed[i], cmp, strlen(cmp))) {
+            break;
+        }
+    }
+    dx_free_parsed_command(parsed);
+    va_end(ap);
+
+    return (i == expect); /*if everything goes well this should be true*/
+}
+
+char *dx_get_param(char *cmd, int number) {
+    char **parsed;
+    char *retval;
+    int i;
+
+    parsed = dx_parse_command(cmd);
+
+    /* walk the array safely */
+    for (i = 0; i < number; i++) {
+        if (parsed[i] == NULL) {
+            break; /*no more array, stop here*/
+        }
+    }
+    retval = parsed[i]; /*NULL on error*/
+
+    dx_free_parsed_command(parsed);
+
+    return retval;
 }
 
 #if 0

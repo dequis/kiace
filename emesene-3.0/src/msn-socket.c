@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "msn.h"
 #include "msn-socket.h"
@@ -34,60 +35,56 @@ MsnSocket dx_socket_new(char hostname[], int port) {
         perror("dx_socket_new");
         abort();
     }
-    printf("Connected to %s\n", host->h_name);
 
     sock.trid = 0;
 
     return sock;
 }
 
-int socket_send_command(MsnSocket *sock,
-                        char command[],
-                        char params[]) {
+void socket_close(MsnSocket *sock) {
+    close(sock->socket);
+    sock->socket = 0;
+}
+
+int socket_send_command(MsnSocket *sock, char *command, char *params) {
     int len;
     int trid;
-    char output[DX_CMDBUFFER];
+    char output[CMDBUF];
 
     sock->trid += 1;
     trid = sock->trid;
 
-    snprintf(output, DX_CMDBUFFER, "%s %d %s\r\n", command, trid, params);
+    snprintf(output, CMDBUF, "%s %d %s\r\n", command, trid, params);
     printf(">>> %s", output);
     
     len = strlen(output);
     if (send(sock->socket, output, len, 0) != len) {
         perror("send");
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
-MsnCommand socket_receive_command(MsnSocket *sock) {
-    char input[DX_CMDBUFFER];
-    char buffer;
+int socket_receive_command(MsnSocket *sock, char *input) {
+    char buffer;   /*single char*/
     int bytes = 0;
-    MsnCommand cmd;
 
     /*fill input with the incoming data until a \r is found*/
-    while (recv(sock->socket, &buffer, 1, 0) != -1 &&
-           buffer != '\r' &&
-           bytes < DX_CMDBUFFER) {
-        input[bytes] = buffer;
-        bytes++;
+    while (1) {
+        if (recv(sock->socket, &buffer, 1, 0) == -1) {
+            perror("recv");
+            return false;
+        }
+        if (buffer == '\r' || bytes >= CMDBUF) {
+            break;
+        } 
+        input[bytes++] = buffer;
     }
 
     recv(sock->socket, &buffer, 1, 0); /*discard \n*/
-
-    /*extract command*/
-    strncpy(cmd.command, input, 3);
-    cmd.command[3] = '\0';
-    
-    strncat(cmd.params, input + 4, DX_PARAM_LENGTH);
-
-    printf("<<< %s %s", cmd.command, cmd.params);
-    
-    return cmd;
+    printf("<<< %s\n", input);
+    return true;
 }
 
 
