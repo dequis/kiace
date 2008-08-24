@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int count_words(char *);
+
 /* i'm proud of this pointer mess [because it's my first pointer mess] */
 
 char** dx_parse_command(char *input) {
@@ -52,6 +54,7 @@ int count_words(char *input) {
     return retval + 1; /*include last word*/
 }
 
+#if 0
 int main(int argc, char **argv) {
     char **asd;
     int i = 0;
@@ -66,3 +69,4 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
+#endif

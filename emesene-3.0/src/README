@@ -1,4 +1,5 @@
-requires some c99 functions
+requires some c99 functionality
 
 specifically:
-snprintf
+snprintf()
+<stdbool.h>
