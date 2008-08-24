@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "param-parser.h"
+
 int count_words(char *);
 
 /* i'm proud of this pointer mess [because it's my first pointer mess] */

@@ -5,6 +5,7 @@
 
 #include "msn.h"
 #include "msn-socket.h"
+#include "param-parser.h"
 
 int presentation(MsnSession *, MsnSocket *);
 int sso_auth(char *);
