@@ -1,5 +1,56 @@
-requires some c99 functionality
+About emesene 3.0 svn
+---------------------
 
-specifically:
-snprintf()
-<stdbool.h>
+emesene 3.0 svn is the standard for horizontally scalable share-nothing
+optimized turnkey solutions. We engineer and deploy targeted and measurable
+full-scale combinations of software and network IT solutions utilizing
+robust and scalable enterprise-ready technical infrastructures that enable 
+our customers to leverage and evolve an integrated toolset for business
+productivity. 
+
+We emphasize the infrastructure, and acceptance among risk averse businesses
+that seek to enable our customers' client with an average of more than years
+of interactive websites and AJAX Web Services and powerful Web services and
+a self healing robust, partner reseller network to maximize the most
+versatile Object the business and the older System that have technical
+Expert IBM Certified by Sun and institutions. 
+
+What the hell
+-------------
+
+This is just an experimental project to help me, dx, gain some experience
+on real-world C programming. Given that I feel quite comfortable with msn
+clients development, I decided to write yet another clone, and having two
+parallel from-scratch branches right now (emesene 1.0 and 2.0), I decided
+to choose the next available version number. Note however, emesene 3.0 is
+not meant to be the successor of 2.0. You can't even compare, because 2.0
+is a strictly client/server-based design, while 3.0 is strictly quick and
+dirty design. So quick and dirty it's yet undefined, and will be modified
+as needed. Yes, I'm still a emesene 1.0/2.0 developer, but I'm not coding
+much for 1.0 because it smells dead and the code is dirty, and 2.0 hasn't
+been released yet.
+
+
+Compilation notes
+-----------------
+
+No ./configure script. Adjust Makefile manually. Should
+work out of the box in most GNU/Linux distros. The only
+portability issues considered are the ones mentioned in
+linux man pages, so YMMV.
+
+Requires some c99 functionality:
+ - The snprintf() function
+ - The <stdbool.h> header, true/false keywords
+
+If your compiler doesn't implement that properly, become
+an hero.
+
+
+Doxygen
+-------
+
+Install it and type "doxygen" to build it at ./docs/.
+I have no plans to host it publically at kiace, since
+i've just did this to know how to use a documentation
+tool.
