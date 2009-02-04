@@ -1,0 +1,55 @@
+Index: emesene.py
+===================================================================
+--- emesene.py	(revisión: 1561)
++++ emesene.py	(copia de trabajo)
+@@ -7,16 +7,29 @@
+ import dialog
+ import Window
+ 
++import plug
++
+ import e3
+ import yaber
++
+ import Signals
+ from e3common import Config
+ from e3common import ConfigDir
+ 
++from protocol.Session import Session
+ from protocol.Worker import EVENTS
+ 
+ Signals.Signals.set_events(EVENTS)
+ 
++class ProtocolE3(plug.Component):
++    implements = ('protocol.Session', )
++    constructor = e3.Session
++
++class ProtocolYaber(plug.Component):
++    implements = ('protocol.Session', )
++    constructor = yaber.Session
++
++
+ class Controller(object):
+     '''class that handle the transition between states of the windows'''
+ 
+@@ -36,15 +49,18 @@
+ 
+         self.session = None
+         self._new_session()
++    
++    ext_session = plug.ExtensionPoint('protocol.Session')
+ 
+     def _new_session(self):
+         '''create a new session object'''
+ 
+         if self.session is not None:
+             self.session.quit()
++        
++        # [0] == e3
++        self.session = self.ext_session[0].constructor()
+ 
+-        #self.session = yaber.Session()
+-        self.session = e3.Session()
+         self.session.signals = Signals.Signals(self.session.events)
+         self.session.signals.connect('login-succeed', self.on_login_succeed)
+         self.session.signals.connect('login-failed', self.on_login_failed)
