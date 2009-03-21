@@ -1,11 +1,30 @@
+import os
+import cgi
+import glob
+import traceback
 import BaseHTTPServer
-import handler
 
-class ReloadingHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+import utils
+import config
+from utils import pre
+
+class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
-        reload(handler)
-        handler.handle(self)
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/plain; charset=UTF-8')
+        self.end_headers()
+        
+        query_string = cgi.parse_qs(utils.get_qs(self.raw_requestline))
+
+        if 'mod' in query_string:
+            try:
+                utils.get_mod(query_string['mod'][0]).main(self.wfile, query_string)
+            except:
+                self.wfile.write(pre(traceback.format_exc()))
+        else:
+            self.wfile.write(pre("Available modules\n" +
+                utils.list_mods()))
 
 if __name__ == '__main__':
-    server = BaseHTTPServer.HTTPServer(('', 8080), ReloadingHandler)
+    server = BaseHTTPServer.HTTPServer(('', config.PORT), Handler)
     server.serve_forever()

@@ -1,14 +1,6 @@
 import html
 
-def handle(self):
-    self.send_response(200)
-    self.send_header('Content-Type', 'text/plain; charset=UTF-8')
-    self.end_headers()
-
-    reload(html)
-    Asd().write(self.wfile)
-
-class Asd(html.Base):
+class Demo(html.Base):
     def __init__(self):
         html.Base.__init__(self)
 
@@ -20,3 +12,5 @@ class Asd(html.Base):
         body.tag('div', id="lol").tag("h1", "lol")
 
 
+def main(buffer, query_string):
+    Demo().write(buffer)
