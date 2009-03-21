@@ -7,8 +7,9 @@ import glob
 import traceback
 import cStringIO as StringIO
 
-from utils import pre
+import utils
 import config
+from utils import pre
 
 query_string = cgi.parse_qs(os.environ['QUERY_STRING'])
 if 'plain' in query_string:
