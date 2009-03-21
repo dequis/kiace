@@ -3,7 +3,7 @@ import config
 pre = lambda text: "<pre>%s</pre>" % text
 
 def get_mod(name):
-    return __import__('.'.join([config.APPDIR, name]), fromlist=['main'])
+    return __import__('.'.join([config.APPDIR, name]), globals(), locals(), fromlist=['main'])
 
 def list_mods():
     import glob, os
