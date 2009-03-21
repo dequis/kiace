@@ -12,10 +12,10 @@ import config
 
 query_string = cgi.parse_qs(os.environ['QUERY_STRING'])
 if 'plain' in query_string:
-    print 'Content-Type', 'text/plain; charset=UTF-8'
+    print 'Content-Type: text/plain; charset=UTF-8'
     utils.pre = lambda text: text
 else:
-    print 'Content-Type', 'text/html; charset=UTF-8'
+    print 'Content-Type: text/html; charset=UTF-8'
 print
 
 if 'mod' in query_string:
