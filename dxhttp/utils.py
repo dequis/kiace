@@ -1,6 +1,6 @@
 import config
 
-pre = lambda text: text #text: "<pre>%s</pre>" % text
+pre = lambda text: text: "<pre>%s</pre>" % text
 
 def get_mod(name):
     return __import__('.'.join([config.APPDIR, name]), fromlist=['main'])

@@ -11,10 +11,14 @@ from utils import pre
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; charset=UTF-8')
-        self.end_headers()
         
         query_string = cgi.parse_qs(utils.get_qs(self.raw_requestline))
+        if 'plain' in query_string:
+            self.send_header('Content-Type', 'text/plain; charset=UTF-8')
+            utils.pre = lambda text: text
+        else:
+            self.send_header('Content-Type', 'text/html; charset=UTF-8')
+        self.end_headers()
 
         if 'mod' in query_string:
             try:
