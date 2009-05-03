@@ -1,0 +1,8 @@
+Ramón O.D. v0.1 ("dile que plotteando te conoci")
+
+To use ramonread.py you need a raw pcm without wave header:
+
+mplayer whatever.flv -ao pcm:nowaveheader:fast
+
+CairoPlot is slow as fuck thanks to python. It is also a deadlock factory.
+I'm looking forward to reimplement it somehow in C.
