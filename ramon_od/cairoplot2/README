@@ -1,0 +1,77 @@
+Cairoplot v2 [ramon O.D.] ("dile que esta noche me quieres compilar")
+
+As I said, CairoPlot in python was slow as fuck. This is a nice
+reimplementation in C, using cairo over SDL. It is incredibly fast and
+should be portable to most platforms with little-endian processors.
+
+Usage:
+
+    cairoplot [--unsigned|--signed] [--little[-endian]|--big[-endian]]
+        [--rate nnnn] [--bits 8|16] [--channels 1|2|...]
+        [--width nnn] [--height nnn] [--partial-loop] [filename]
+    
+    cairoplot [-u|-s] [-le|-be] [-8|-16] [-r nnnn] [-c1|-c2|-c...]
+        [-w nnn] [-h nnn] [filename]
+
+    Most parameters are self-explanatory.
+
+     * --width and --height affect the size of the SDL window.
+
+     * --partial-loop draws progressively the graph, going from left to right
+        and restarting from left once the chart is full, by clearing parts and
+        redrawing vertical stripes partially. It is easier to see it than to
+        try to understand this. Notably slower.
+
+    If "filename" is omitted or is "-", stdin is used as input.
+
+    All options except --partial-loop have their short versions which allows
+    writing the PCM format in a neat way like the example below.
+    
+    The default values are the same as /dev/dsp: unsigned, 8 bits,
+    little endian, 8000hz, single channel (mono). The window is 640x480
+    
+    -le and -be only make sense in 16 bit.
+
+Example:
+
+    mplayer whatever.flv -ao pcm:nowaveheader:fast
+    ./cairoplot -s16le -r22050 -w800 audiodump.pcm
+
+    -s16le means signed, 16 bits, little-endian. 22050hz is the default rate
+    from .flv files, and the window is 800px wide.
+Caveats:
+    
+    Mostly untested.
+    Accuracy of PCM frame decoder unknown.
+    --channels and --big-endian not implemented.
+    The window can't be resized.
+    This is not a man page.
+
+Bug reporting:
+
+    For the poor souls that are unable to use gdb, here's how to use it.
+
+    If you get a segmentation fault or similar (crashes), run
+        $ gdb ./cairoplot
+    without any parameters. Once you are inside the gdb shell:
+        (gdb)
+    you can type "run" followed by the parameters:
+        (gdb) run -w1200
+    After that you have to make the program crash if it haven't yet.
+    You'll get something like this:
+        Program received signal SIGSEGV, Segmentation fault.
+        [Switching to Thread 0xb7a496c0 (LWP 10250)]
+        0xb7d77dee in fread () from /lib/libc.so.6
+        (gdb)
+    Type "bt" to print out a backtrace. Then copypaste the whole thing and
+    send it to a developer, that is, me. For the sake of completeness here
+    you have one:
+        (gdb) bt
+        #0  0xb7d77dee in fread () from /lib/libc.so.6
+        #1  0x08049b60 in dx_pcm_read_frame (pcm=0xbfbb6384, frame=0xbfbb6330) at dx_pcm.c:18
+        #2  0x08048dea in partial_loop (dxctx=0xbfbb63a0, pcm=0xbfbb6384) at main.c:45
+        #3  0x08048da3 in main (argc=Cannot access memory at address 0x0
+        ) at main.c:32
+
+    The same procedure applies to most programs.
+

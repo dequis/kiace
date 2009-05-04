@@ -46,11 +46,10 @@ class PlotScreen(gtk.DrawingArea):
 
         if not self.input.empty():
             cr.set_source_rgb(0.0, 1.0, 0.0)
+            cr.set_line_width(1.0)
             try:
                 ly = 0
                 for x in xrange(width):
-                    y = self.input.get_nowait()
-                    y = self.input.get_nowait()
                     y = self.input.get_nowait()
                     if y != ly:
                         cr.line_to(x, y * height / 3 + height / 2)
