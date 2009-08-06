@@ -1,2 +1,0 @@
-APPDIR = 'app'
-PORT = 8080
